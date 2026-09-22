@@ -1,5 +1,7 @@
 const SUPABASE_URL="https://ndlizdfcmmywpwrecskx.supabase.co";
 const SUPABASE_KEY="sb_publishable_ggDoRBP2Ul658l-7rHKBPQ_WRrrOZqn";
+function bootError(msg){document.body.innerHTML='<div style="font-family:system-ui;padding:32px;max-width:600px;margin:auto"><h2>Mikefit needs one more moment</h2><p>'+msg+'</p><button onclick="location.reload()">Reload</button></div>'}
+if(!window.supabase){bootError("The authentication library did not load. Reloading should retry it.");throw new Error("Supabase library unavailable");}
 const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const app=$("app"),authScreen=$("auth-screen"),form=$("auth-form"),toggle=$("auth-toggle"),submit=$("auth-submit"),title=$("auth-title"),subtitle=$("auth-subtitle"),nameField=$("name-field"),message=$("auth-message"),toast=$("toast");
@@ -14,6 +16,6 @@ async function authSubmitHandler(e){if(e?.preventDefault)e.preventDefault();subm
 toggle.onclick=()=>{signup=!signup;nameField.classList.toggle("hidden",!signup);title.textContent=signup?"Create your account":"Welcome back 👋";subtitle.textContent=signup?"Start your Mikefit journey today.":"Sign in to continue your fitness journey.";toggle.textContent=signup?"Already have an account? Sign in":"Need an account? Sign up";submit.textContent=signup?"Create account":"Sign in"};
 form.onsubmit=authSubmitHandler;
 submit.onclick=()=>{if(form.reportValidity())authSubmitHandler({preventDefault(){}})};
-window.mikefitReady=true;window.mikefitAuthSubmit=authSubmitHandler;
+window.mikefitReady=true;window.mikefitAuthSubmit=authSubmitHandler;console.log("Mikefit auth ready");
 supabase.auth.onAuthStateChange((event,session)=>{if(session?.user){user=session.user;showApp();loadData().catch(console.warn)}else if(event==="SIGNED_OUT")showAuth()});
 (async()=>{try{const {data}=await supabase.auth.getSession();if(data.session){user=data.session.user;showApp();loadData().catch(console.warn)}else showAuth()}catch(e){showAuth(e.message)}})();
